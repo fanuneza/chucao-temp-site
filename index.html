@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agencia Chucao — Próximamente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ── Design tokens ── */
+    :root {
+      --color-orange:      #CC4B3A;
+      --color-orange-dark: #A33C2D;
+      --color-orange-pale: #F9EDEB;
+      --color-forest:      #1C2E1A;
+      --color-forest-mid:  #2A4427;
+      --color-olive:       #5C6B57;
+      --color-moss:        #DDE3D8;
+      --color-sage:        #F4F6F1;
+      --color-black:       #111111;
+      --color-white:       #FFFFFF;
+
+      --font-sans: 'Montserrat', sans-serif;
+      --font-serif: 'Lora', Georgia, serif;
+
+      --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ── Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+
+    body {
+      min-height: 100dvh;
+      font-family: var(--font-serif);
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--color-black);
+      background-color: var(--color-forest);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    img { display: block; max-width: 100%; }
+    a { color: inherit; transition: color var(--transition), opacity var(--transition); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ── Noise texture overlay ── */
+    .noise-bg { position: relative; }
+    .noise-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.045;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .noise-bg > * { position: relative; z-index: 1; }
+
+    /* ── Layout ── */
+    .container-xl {
+      max-width: 1240px;
+      margin-inline: auto;
+      padding-inline: 1.5rem;
+    }
+
+    /* ── Nav ── */
+    nav {
+      padding: 1.75rem 0;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* ── SVG Logo ── */
+    .logo { display: flex; align-items: center; gap: 0.625rem; text-decoration: none; }
+    .logo-mark { flex-shrink: 0; }
+    .logo-name {
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-white);
+      line-height: 1;
+    }
+    .logo-name span {
+      display: block;
+      font-weight: 400;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.5);
+      margin-top: 0.2rem;
+    }
+
+    /* ── Main / Hero ── */
+    main {
+      display: flex;
+      align-items: center;
+      padding-block: 4rem;
+    }
+
+    .hero {
+      text-align: left;
+      max-width: 720px;
+    }
+
+    .eyebrow {
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 0.625rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-orange);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .eyebrow::before {
+      content: '';
+      display: block;
+      width: 48px;
+      height: 2px;
+      background: var(--color-orange);
+      flex-shrink: 0;
+    }
+
+    h1 {
+      font-family: var(--font-sans);
+      font-weight: 900;
+      font-size: clamp(2.5rem, 5vw + 1rem, 5.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--color-white);
+      margin-bottom: 1.5rem;
+    }
+    h1 em {
+      font-style: italic;
+      font-family: var(--font-serif);
+      font-weight: 400;
+      color: var(--color-orange);
+    }
+
+    .hero-body {
+      font-family: var(--font-serif);
+      font-size: clamp(1rem, 1.5vw, 1.125rem);
+      line-height: 1.8;
+      color: rgba(255,255,255,0.65);
+      max-width: 52ch;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── Status badge ── */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 0.5rem 1rem 0.5rem 0.625rem;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.7);
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-orange);
+      animation: pulse 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    /* ── Divider ── */
+    .h-rule-light {
+      width: 48px;
+      height: 2px;
+      background: rgba(255,255,255,0.15);
+      margin-bottom: 2rem;
+    }
+
+    /* ── Contact row ── */
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--color-orange);
+      color: var(--color-white);
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 0.8125rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.875rem 1.75rem;
+      border-radius: 4px;
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+    .btn-primary:hover {
+      background: var(--color-orange-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(204,75,58,0.35);
+    }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .contact-link {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+    }
+    .contact-link:hover { color: var(--color-white); }
+
+    /* ── Right panel – decorative card ── */
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4rem;
+      align-items: center;
+      width: 100%;
+    }
+
+    @media (min-width: 900px) {
+      .layout-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .panel {
+      background: var(--color-forest-mid);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .panel-label {
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .service-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.875rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .service-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .service-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(204,75,58,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--color-orange);
+    }
+
+    .service-name {
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 0.8125rem;
+      color: var(--color-white);
+      margin-bottom: 0.15rem;
+    }
+    .service-desc {
+      font-family: var(--font-serif);
+      font-size: 0.8125rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.5;
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 1.75rem 0;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .footer-copy {
+      font-family: var(--font-sans);
+      font-size: 0.6875rem;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.03em;
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.25rem;
+      list-style: none;
+    }
+    .footer-links a {
+      font-family: var(--font-sans);
+      font-size: 0.6875rem;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.7); }
+
+    /* ── Entrance animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-anim-1 { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.05s both; }
+    .hero-anim-2 { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.20s both; }
+    .hero-anim-3 { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.35s both; }
+    .hero-anim-4 { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.50s both; }
+    .hero-anim-5 { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.65s both; }
+    .panel-anim  { animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.45s both; }
+  </style>
+</head>
+<body class="noise-bg">
+
+  <!-- Nav -->
+  <nav>
+    <div class="container-xl">
+      <div class="nav-inner">
+        <!-- Logo -->
+        <a href="#" class="logo" aria-label="Agencia Chucao">
+          <svg class="logo-mark" width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <!-- Stylized "C" mark with leaf/branch motif -->
+            <rect width="36" height="36" rx="8" fill="#1C2E1A"/>
+            <path d="M24 11C21.5 9.2 18.2 8.5 15 9.3C10.6 10.4 7.5 14.3 7.5 18.9C7.5 23.8 11.3 27.8 16.2 28.4" stroke="#CC4B3A" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M20 15L24 11L28 15" stroke="#CC4B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M24 11V22" stroke="#CC4B3A" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="logo-name">
+            Chucao
+            <span>Agencia Digital</span>
+          </div>
+        </a>
+
+        <!-- Status badge -->
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          En construcción
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main>
+    <div class="container-xl" style="width:100%">
+      <div class="layout-grid">
+
+        <!-- Left: copy -->
+        <div class="hero">
+          <p class="eyebrow hero-anim-1">Próximamente</p>
+          <h1 class="hero-anim-2">Estamos<br>construyendo <em>algo</em><br>nuevo.</h1>
+          <p class="hero-body hero-anim-3">
+            Nuestro nuevo sitio está en camino. Mientras tanto, escríbenos directamente
+            — estamos activos y listos para ayudarte con tu próximo proyecto digital.
+          </p>
+          <div class="h-rule-light hero-anim-4"></div>
+          <div class="contact-row hero-anim-5">
+            <a href="mailto:hola@chucao.cl" class="btn-primary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+              hola@chucao.cl
+            </a>
+            <a href="https://instagram.com/agenciachucao" target="_blank" rel="noopener noreferrer" class="contact-link">
+              Instagram →
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: services preview card -->
+        <div class="panel panel-anim" aria-label="Servicios que ofrecemos">
+          <p class="panel-label">Lo que hacemos</p>
+
+          <div class="service-item">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+            <div>
+              <p class="service-name">Diseño Web</p>
+              <p class="service-desc">Sitios a medida, rápidos y con identidad propia.</p>
+            </div>
+          </div>
+
+          <div class="service-item">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <div>
+              <p class="service-name">Marketing Digital</p>
+              <p class="service-desc">SEO, pauta y contenido que genera resultados reales.</p>
+            </div>
+          </div>
+
+          <div class="service-item">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <div>
+              <p class="service-name">Branding</p>
+              <p class="service-desc">Identidad visual coherente desde el logo hasta la web.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container-xl">
+      <div class="footer-inner">
+        <p class="footer-copy">© 2026 Agencia Chucao — Santiago, Chile</p>
+        <ul class="footer-links">
+          <li><a href="mailto:hola@chucao.cl">Contacto</a></li>
+          <li><a href="https://instagram.com/agenciachucao" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
